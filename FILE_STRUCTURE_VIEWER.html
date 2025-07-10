@@ -638,6 +638,10 @@
                     <span class="nav-icon">🛠️</span>
                     管理・ユーティリティ
                 </a>
+                <a href="#commands-reference" class="nav-item" data-section="commands-reference">
+                    <span class="nav-icon">⚡</span>
+                    コマンド一覧
+                </a>
                 <a href="#config-reference" class="nav-item" data-section="config-reference">
                     <span class="nav-icon">🔧</span>
                     設定リファレンス
@@ -724,7 +728,7 @@
                     <div class="stat-label">主要機能システム</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">100+</div>
+                    <div class="stat-number">40+</div>
                     <div class="stat-label">Discordコマンド</div>
                 </div>
                 <div class="stat-card">
@@ -1353,6 +1357,344 @@ LOG_DIRECTORY = 'DRIVE:/Python/My_LLM_Project/user_logs'
 
 # ログファイル命名規則
 log_filename = f"{username}_messages_{datetime.now().strftime('%Y%m%d')}.txt"</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- コマンド一覧 -->
+        <section id="commands-reference" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">⚡</span>
+                    Sophia Discord コマンド完全一覧
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="code-block">
+                    <div class="code-header">📊 統計情報</div>
+                    <div class="code-content">
+<pre>総コマンド数: 40個以上
+Slash Commands: 35個
+Context Menus: 5個
+自動機能: 10個以上
+対応システム: 11システム</pre>
+                    </div>
+                </div>
+
+                <!-- メインボット -->
+                <div class="file-item" data-file="main-commands" data-tags="main commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🤖</span>
+                            メインシステム
+                        </div>
+                        <div>
+                            <span class="tag">メイン</span>
+                            <span class="tag">AI</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">Slash Commands</div>
+                        <div class="code-content">
+<pre><strong>/restart4</strong> - ソフィア再起動（開発者専用）
+<strong>/switch_model</strong> - AIモデル切り替え（8種類のGemini選択可能）</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">自然言語機能</div>
+                        <div class="code-content">
+<pre>• メンション・トリガーワード反応（ソフィア、ソフィ、そふぃ）
+• AIチャット（Gemini 2.5 Flash）
+• 画像認識・解析対応
+• 会話履歴管理
+• ユーザー別応答調整</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RPGシステム -->
+                <div class="file-item" data-file="rpg-commands" data-tags="rpg commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🎮</span>
+                            RPGシステム
+                        </div>
+                        <div>
+                            <span class="tag rpg">RPG</span>
+                            <span class="tag">ゲーム</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">Slash Commands</div>
+                        <div class="code-content">
+<pre><strong>/vlevel</strong> - レベル・ゴールド表示
+<strong>/vinventory</strong> - インベントリ表示（ソート機能付き）
+<strong>/vequip &lt;ID&gt;</strong> - アイテム装備
+<strong>/vstats</strong> - 装備・ステータス表示
+<strong>/vreroll &lt;ID&gt;</strong> - アイテム効果再抽選（同レア度5個消費）
+<strong>/vsell &lt;ID&gt;</strong> - アイテム売却（複数指定可能）
+<strong>/vbattle</strong> - ランダム敵とバトル
+<strong>/vgacha</strong> - ガチャシステム
+<strong>/vreset_rpg</strong> - RPGデータリセット（開発者専用）</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">自動機能・特徴</div>
+                        <div class="code-content">
+<pre>• メッセージ送信でEXP獲得・レベルアップ
+• レベルアップ時のアイテムドロップ（7段階レアリティ）
+• 装備による自動ロール付与
+• 戦闘システム（攻撃・防御・逃走）
+• 複雑なガチャシステム（3種類）
+• インベントリ管理（上限有り）
+• アイテム効果再抽選機能</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 音楽システム -->
+                <div class="file-item" data-file="audio-commands" data-tags="audio commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🎵</span>
+                            音楽システム
+                        </div>
+                        <div>
+                            <span class="tag audio">音楽</span>
+                            <span class="tag">再生</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">Slash Commands</div>
+                        <div class="code-content">
+<pre><strong>/join</strong> - ボイスチャンネル参加
+<strong>/leave</strong> - ボイスチャンネル退出
+<strong>/play &lt;query&gt;</strong> - 音楽再生（YouTube/Spotify・プレイリスト対応）
+<strong>/play_random &lt;channel&gt;</strong> - 指定チャンネルからランダムURL再生
+<strong>/interrupt &lt;query&gt;</strong> - キュー割り込み再生
+<strong>/skip</strong> - 曲スキップ
+<strong>/stop</strong> - 再生停止・キュークリア
+<strong>/pause</strong> - 一時停止
+<strong>/resume</strong> - 再生再開
+<strong>/loop</strong> - 曲リピート切り替え
+<strong>/loop_queue</strong> - キュー全体ループ切り替え
+<strong>/clear</strong> - キューのみクリア
+<strong>/queue</strong> - 再生待ちキュー表示
+<strong>/help</strong> - ヘルプメニュー（5ページ構成）</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">対応機能・特徴</div>
+                        <div class="code-content">
+<pre>• YouTube・Spotify URL/検索対応
+• プレイリスト自動展開・バックグラウンド処理
+• 高品質音声ストリーミング（FFmpeg）
+• ループ再生（曲・キュー両対応）
+• チャンネル履歴からランダム再生
+• 複数ギルド対応
+• プレゼンス連動（再生中楽曲表示）</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 家電制御 -->
+                <div class="file-item" data-file="home-commands" data-tags="home commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🏠</span>
+                            家電・環境監視システム
+                        </div>
+                        <div>
+                            <span class="tag home">家電</span>
+                            <span class="tag">監視</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">Slash Commands（開発者専用）</div>
+                        <div class="code-content">
+<pre><strong>/h pc on</strong> - PC電源操作
+<strong>/h ac &lt;action&gt;</strong> - エアコン制御（on/off/temp）
+　　温度設定: /h ac temp 25（16-30℃）</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">Slash Commands（一般利用可能）</div>
+                        <div class="code-content">
+<pre><strong>/hv meter</strong> - 環境センサー値表示
+　　温度・湿度・CO2・絶対湿度・露点温度・VPD
+<strong>/hv plug</strong> - プラグミニ電力状況表示
+　　電源状態・電力・電圧・今日の使用量・電流</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">自動機能・特徴</div>
+                        <div class="code-content">
+<pre>• 環境センサー定期監視（3分間隔）
+• しきい値超過時の自動アラート
+• 段階的警告システム（注意→警告→危険）
+• Webhook通知システム
+• 重要アラート時のAI応答生成
+• SwitchBot API連携</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 情報収集システム -->
+                <div class="file-item" data-file="info-commands" data-tags="info commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📰</span>
+                            情報収集システム
+                        </div>
+                        <div>
+                            <span class="tag">RSS</span>
+                            <span class="tag">情報</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">フィード監視コマンド</div>
+                        <div class="code-content">
+<pre><strong>/q add &lt;name&gt; &lt;url&gt; &lt;channel&gt;</strong> - RSS/Atomフィード監視追加
+<strong>/q list</strong> - 監視中ソース一覧表示
+<strong>/q remove &lt;IDs&gt;</strong> - 監視ソース削除（複数指定可能）</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">テキスト反応・自動機能</div>
+                        <div class="code-content">
+<pre><strong>おみくじ反応</strong> - 「おみくじ」メッセージでAI生成運勢回答
+　　ラッキーカラー・アイテム・アドバイス付き
+
+<strong>自動フィード監視</strong>:
+• 10分間隔でのフィード更新チェック
+• 新着記事の自動通知（OGP画像・AI生成コメント付き）
+• デフォルトソース自動セットアップ（技術・AI・PCハード・ゲーム関連）
+
+<strong>自発会話</strong>:
+• 1日1回のランダム時刻での自発的投稿（12-20時）
+• 最もアクティブなチャンネルを自動選択
+• AI生成による自然な独り言</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- コンテキストメニュー -->
+                <div class="file-item" data-file="context-commands" data-tags="context commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📋</span>
+                            コンテキストメニュー
+                        </div>
+                        <div>
+                            <span class="tag">右クリック</span>
+                            <span class="tag">AI</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">右クリックメニュー（メッセージ対象）</div>
+                        <div class="code-content">
+<pre><strong>このメッセージをAIで要約</strong> - マルチメディア対応AI要約
+　　テキスト・画像・埋め込み・URL・YouTube動画の総合解析
+　　YouTube字幕取得・OGP画像解析・複数ソースの統合要約
+
+<strong>このメッセージを一番下に表示し続ける</strong> - スティッキーメッセージ機能
+　　チャンネル最下部に常時表示・権限必要
+
+<strong>このメッセージを後で消す</strong> - 時間指定削除
+　　6時間後・12時間後・24時間後から選択
+
+<strong>メッセージを埋め込みにする</strong> - Embed形式変換
+　　通常テキストをリッチな埋め込み形式に変換
+
+<strong>メッセージの文字数を数える</strong> - 文字数カウント
+　　正確な文字数を瞬時に表示</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 管理・ユーティリティ -->
+                <div class="file-item" data-file="utility-commands" data-tags="admin commands">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🛠️</span>
+                            管理・ユーティリティ
+                        </div>
+                        <div>
+                            <span class="tag admin">管理</span>
+                            <span class="tag">ログ</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">自動ログ・監視機能</div>
+                        <div class="code-content">
+<pre><strong>メッセージログ収集</strong>:
+• 特定ユーザーのメッセージ自動ログ保存
+• ユーザー別CSV出力
+• タイムスタンプ付き記録
+
+<strong>システム監視</strong>:
+• ボット稼働状況監視
+• エラー自動通知
+• 再起動ループ対応</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 特別な機能 -->
+                <div class="file-item" data-file="special-features" data-tags="special features">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">✨</span>
+                            特別な機能・UI
+                        </div>
+                        <div>
+                            <span class="tag">UI</span>
+                            <span class="tag">インタラクション</span>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">Button/View インタラクション</div>
+                        <div class="code-content">
+<pre><strong>ヘルプシステム</strong>:
+• 5ページ構成のページネーション
+• カテゴリ別詳細説明
+• 検索機能付きヘルプ
+
+<strong>RPGインタラクション</strong>:
+• インベントリソート・ページング
+• バトルシステム（攻撃・防御・逃走ボタン）
+• ガチャ選択UI
+• 装備確認ダイアログ
+• アイテム交換UI
+
+<strong>時間指定削除</strong>:
+• 3つの時間選択ボタン
+• キャンセル機能付き</pre>
+                        </div>
+                    </div>
+                    <div class="code-block">
+                        <div class="code-header">高度なAI・API連携</div>
+                        <div class="code-content">
+<pre><strong>AIモデル対応</strong>:
+• Gemini 2.5 Pro/Flash系（8種類）
+• 用途別モデル自動切り替え
+• セーフティ設定無効化
+
+<strong>外部API連携</strong>:
+• YouTube Data・字幕API
+• Spotify API
+• SwitchBot API
+• RSS/Atom パーサー
+• OGP画像取得
+
+<strong>データベース機能</strong>:
+• SQLite による永続化
+• RPGデータ・スティッキーメッセージ・フィード監視
+• トランザクション管理
+• 自動バックアップ</pre>
                         </div>
                     </div>
                 </div>
