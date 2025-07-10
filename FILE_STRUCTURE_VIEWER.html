@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sophia プロジェクト - ファイル構造詳細</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --secondary-color: #1e40af;
+            --accent-color: #3b82f6;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #334155;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --sidebar-width: 280px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* ローディング画面 */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease;
+        }
+
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 4px solid var(--border-color);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ヘッダー */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 70px;
+            background: rgba(30, 41, 59, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-right: auto;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .search-box {
+            position: relative;
+            width: 300px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 0.5rem 1rem 0.5rem 2.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+        }
+
+        .theme-toggle {
+            padding: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--border-color);
+        }
+
+        /* サイドバー */
+        .sidebar {
+            position: fixed;
+            top: 70px;
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - 70px);
+            background: var(--card-bg);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            z-index: 999;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-content {
+            padding: 1.5rem;
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-title {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 1rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            margin-bottom: 0.25rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-item:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-icon {
+            margin-right: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .filter-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .filter-title {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: 0.5rem;
+        }
+
+        .filter-options {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .filter-option {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: background 0.2s ease;
+        }
+
+        .filter-option:hover {
+            background: rgba(100, 116, 139, 0.1);
+        }
+
+        .filter-checkbox {
+            margin-right: 0.5rem;
+            accent-color: var(--primary-color);
+        }
+
+        /* メインコンテンツ */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: 70px;
+            padding: 2rem;
+            min-height: calc(100vh - 70px);
+        }
+
+        .content-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .content-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .content-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        .section {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .section-header {
+            padding: 1.5rem 2rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .section-icon {
+            font-size: 1.5rem;
+        }
+
+        .collapse-icon {
+            transition: transform 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .section.collapsed .collapse-icon {
+            transform: rotate(-90deg);
+        }
+
+        .section-content {
+            padding: 2rem;
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+
+        .section.collapsed .section-content {
+            max-height: 0;
+            padding: 0 2rem;
+        }
+
+        .file-item {
+            background: rgba(100, 116, 139, 0.05);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            background: rgba(100, 116, 139, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .file-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .file-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .file-icon {
+            font-size: 1.2rem;
+        }
+
+        .file-description {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .code-block {
+            background: #0d1117;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            overflow: hidden;
+            margin: 1rem 0;
+        }
+
+        .code-header {
+            background: var(--border-color);
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .code-content {
+            padding: 1rem;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Consolas', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            margin: 0.25rem;
+        }
+
+        .tag.config { background: var(--success-color); }
+        .tag.rpg { background: var(--warning-color); }
+        .tag.audio { background: #8b5cf6; }
+        .tag.home { background: #f97316; }
+        .tag.admin { background: var(--error-color); }
+
+        .dependency-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .dependency-item {
+            background: rgba(59, 130, 246, 0.1);
+            border: 1px solid rgba(59, 130, 246, 0.3);
+            color: var(--accent-color);
+            padding: 0.25rem 0.75rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .highlight {
+            background: rgba(251, 191, 36, 0.2);
+            border-radius: 3px;
+            padding: 0.1rem 0.2rem;
+        }
+
+        /* レスポンシブデザイン */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .search-box {
+                width: 200px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 0 1rem;
+            }
+
+            .header-title {
+                font-size: 1.2rem;
+            }
+
+            .search-box {
+                width: 150px;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .section-content {
+                padding: 1rem;
+            }
+
+            .file-item {
+                padding: 1rem;
+            }
+        }
+
+        /* ダークテーマとライトテーマ切り替え */
+        .light-theme {
+            --bg-color: #ffffff;
+            --card-bg: #f8fafc;
+            --text-primary: #1e293b;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+        }
+
+        /* スクロールバー */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-color);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-muted);
+        }
+
+        /* アニメーション */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .fade-in {
+            animation: fadeInUp 0.5s ease forwards;
+        }
+
+        /* フローティングアクションボタン */
+        .fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: var(--primary-color);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+        }
+
+        /* トーストメッセージ */
+        .toast {
+            position: fixed;
+            top: 90px;
+            right: 2rem;
+            background: var(--success-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            z-index: 1001;
+        }
+
+        .toast.show {
+            transform: translateX(0);
+        }
+    </style>
+</head>
+<body>
+    <!-- ローディング画面 -->
+    <div class="loading" id="loading">
+        <div class="loading-spinner"></div>
+    </div>
+
+    <!-- ヘッダー -->
+    <header class="header">
+        <h1 class="header-title">📄 Sophia Project Documentation</h1>
+        <div class="header-controls">
+            <div class="search-box">
+                <span class="search-icon">🔍</span>
+                <input type="text" class="search-input" placeholder="ファイル・設定を検索..." id="searchInput">
+            </div>
+            <button class="theme-toggle" id="themeToggle" title="テーマ切り替え">🌙</button>
+        </div>
+    </header>
+
+    <!-- サイドバー -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-content">
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">ナビゲーション</h3>
+                <a href="#overview" class="nav-item" data-section="overview">
+                    <span class="nav-icon">📊</span>
+                    概要
+                </a>
+                <a href="#main-system" class="nav-item" data-section="main-system">
+                    <span class="nav-icon">🤖</span>
+                    メインシステム
+                </a>
+                <a href="#rpg-system" class="nav-item" data-section="rpg-system">
+                    <span class="nav-icon">🎮</span>
+                    RPGシステム
+                </a>
+                <a href="#audio-system" class="nav-item" data-section="audio-system">
+                    <span class="nav-icon">🎵</span>
+                    音楽システム
+                </a>
+                <a href="#home-system" class="nav-item" data-section="home-system">
+                    <span class="nav-icon">🏠</span>
+                    家電・監視システム
+                </a>
+                <a href="#info-system" class="nav-item" data-section="info-system">
+                    <span class="nav-icon">📰</span>
+                    情報収集システム
+                </a>
+                <a href="#utility-system" class="nav-item" data-section="utility-system">
+                    <span class="nav-icon">🛠️</span>
+                    管理・ユーティリティ
+                </a>
+                <a href="#config-reference" class="nav-item" data-section="config-reference">
+                    <span class="nav-icon">🔧</span>
+                    設定リファレンス
+                </a>
+            </div>
+
+            <div class="sidebar-section">
+                <h3 class="sidebar-title">フィルター</h3>
+                <div class="filter-group">
+                    <div class="filter-title">ファイルタイプ</div>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="python" checked>
+                            Python (.py)
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="config" checked>
+                            設定ファイル
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="database" checked>
+                            データベース
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="support" checked>
+                            サポートファイル
+                        </label>
+                    </div>
+                </div>
+
+                <div class="filter-group">
+                    <div class="filter-title">機能システム</div>
+                    <div class="filter-options">
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="main" checked>
+                            メインシステム
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="rpg" checked>
+                            RPGシステム
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="audio" checked>
+                            音楽システム
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="home" checked>
+                            家電システム
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="info" checked>
+                            情報システム
+                        </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="admin" checked>
+                            管理システム
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- メインコンテンツ -->
+    <main class="main-content">
+        <!-- 概要セクション -->
+        <section id="overview" class="content-section">
+            <div class="content-header">
+                <h1 class="content-title">Sophia プロジェクト - ファイル構造詳細</h1>
+                <p class="content-subtitle">2025-07-10 - 全ファイル詳細分析</p>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-number">26</div>
+                    <div class="stat-label">総ファイル数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">10,000+</div>
+                    <div class="stat-label">総行数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">8</div>
+                    <div class="stat-label">主要機能システム</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">100+</div>
+                    <div class="stat-label">Discordコマンド</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">600+</div>
+                    <div class="stat-label">RPGアイテム定義</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number">70</div>
+                    <div class="stat-label">敵キャラクター</div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-header">
+                    <div class="section-title">
+                        <span class="section-icon">📁</span>
+                        プロジェクト構造
+                    </div>
+                    <span class="collapse-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="code-block">
+                        <div class="code-header">プロジェクト構造</div>
+                        <div class="code-content">
+<pre>Sophia/
+├── 📄 sophia_bot.py           # メインボット・AI会話システム
+├── ⚙️ config.py              # 全体設定管理
+├── 🎮 RPG_cog.py             # RPGゲームシステム
+├── 🎰 gacha_system.py        # ガチャシステム
+├── 📊 rpg_data.py            # RPGデータ定義
+├── 🔧 rpg_utils.py           # RPGユーティリティ
+├── 🎨 rpg_views.py           # RPG用UI要素
+├── 👑 sophia_admin_cog.py    # 管理者コマンド
+├── 🎵 sophia_audio_cog.py    # 音楽再生機能
+├── 📋 sophia_context_menu_cog.py # コンテキストメニュー
+├── 📰 sophia_feed_monitor_cog.py # RSSフィード監視
+├── 🏠 sophia_home_cog.py     # 家電操作
+├── 📝 sophia_logger_cog.py   # メッセージログ
+├── 🌡️ sophia_monitor_cog.py  # 環境監視
+├── 🔮 sophia_omikuji_cog.py  # おみくじ機能
+├── 💬 sophia_proactive_cog.py # 自発会話
+├── 🔌 switchbot_api.py       # SwitchBot API
+├── 🗃️ sophia_database.db     # SQLiteデータベース
+├── 🗃️ sticky_messages_sophia.db # スティッキーメッセージDB
+├── 📄 requirements.txt       # 依存関係
+├── 📄 README.md             # プロジェクト説明
+├── 📄 bot_restart.log        # 再起動ログ
+├── 📄 commit_message.txt     # Gitコミットメッセージ
+├── 📄 kakuritu.html          # RPG確率表示HTML
+├── 📄 restart_loop4.ps1      # PowerShell自動再起動スクリプト
+└── 📁 venv/                  # 仮想環境</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- メインシステム -->
+        <section id="main-system" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">🤖</span>
+                    メインシステム
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <!-- sophia_bot.py -->
+                <div class="file-item" data-file="sophia_bot.py" data-tags="main python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📄</span>
+                            sophia_bot.py
+                        </div>
+                        <div>
+                            <span class="tag">メイン</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> メインボット・AI会話システム
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">設定可能なパラメータ</div>
+                        <div class="code-content">
+<pre># 開発者設定
+owner_id = DEVELOPER_ID
+
+# AIモデル設定
+current_model_name = "gemini-2.5-flash"
+
+# 処理設定
+processed_messages = deque(maxlen=100)  # 重複処理防止キュー長
+
+# 反応トリガー
+trigger_words = ["ソフィア", "ソフィ", "そふぃ", r"¯\_(ツ)_/¯"]
+
+# スティッキーメッセージDB
+sticky_db_path = 'sticky_messages_sophia.db'
+
+# 並列処理設定
+executor = ThreadPoolExecutor(max_workers=5)</pre>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">環境変数</div>
+                        <div class="code-content">
+<pre>GOOGLE_API_KEY=          # Gemini API キー
+DISCORD_BOT_TOKEN6=      # Discord ボットトークン</pre>
+                        </div>
+                    </div>
+
+                    <div class="dependency-list">
+                        <span class="dependency-item">全Cogファイル</span>
+                    </div>
+                </div>
+
+                <!-- config.py -->
+                <div class="file-item" data-file="config.py" data-tags="main config python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">⚙️</span>
+                            config.py
+                        </div>
+                        <div>
+                            <span class="tag config">設定</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 全体設定管理
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">デバイス設定</div>
+                        <div class="code-content">
+<pre>DEVICE_IDS = {
+    "pc": "DEVICE_PC_ID",                 # PC電源制御
+    "ac": "DEVICE_AC_ID",                 # エアコン制御
+    "co2_meter": "DEVICE_CO2_ID",         # CO2センサー
+    "plug_mini": "DEVICE_PLUG_ID"          # プラグミニ
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">監視設定</div>
+                        <div class="code-content">
+<pre>MONITOR_CHANNEL_ID = MONITOR_CHANNEL_ID      # 監視通知チャンネル
+MONITOR_WEBHOOK_URL = "WEBHOOK_URL_PLACEHOLDER"  # Discord Webhook URL
+MONITOR_INTERVAL_SECONDS = 180              # 監視間隔（秒）</pre>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">環境しきい値</div>
+                        <div class="code-content">
+<pre>THRESHOLDS = {
+    "temperature": {
+        "LL": 18.0,  # 極低温警告
+        "L": 20.0,   # 低温注意
+        "H": 28.0,   # 高温注意
+        "HH": 30.0   # 極高温警告
+    },
+    "humidity": {
+        "LL": 20.0,  # 極低湿度警告
+        "L": 30.0,   # 低湿度注意
+        "H": 60.0,   # 高湿度注意
+        "HH": 70.0   # 極高湿度警告
+    },
+    "co2": {
+        "LL": None,  # 下限なし
+        "L": None,   # 下限なし
+        "H": 1000,   # 高CO2注意
+        "HH": 1500   # 極高CO2警告
+    },
+    "power": {
+        "LL": None,    # 下限なし
+        "L": None,     # 下限なし
+        "H": 300.0,    # 高電力注意
+        "HH": 500.0    # 極高電力警告
+    }
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="dependency-list">
+                        <span class="dependency-item">複数のCogから参照</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RPGシステム -->
+        <section id="rpg-system" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">🎮</span>
+                    RPGシステム
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <!-- RPG_cog.py -->
+                <div class="file-item" data-file="RPG_cog.py" data-tags="rpg python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🎮</span>
+                            RPG_cog.py
+                        </div>
+                        <div>
+                            <span class="tag rpg">RPG</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> RPGゲームメイン機能
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">設定可能なパラメータ</div>
+                        <div class="code-content">
+<pre>chars_per_level = 250                       # レベルアップ必要文字数
+ENEMY_DATA_PATH = "enemy/"                  # 敵データフォルダ</pre>
+                        </div>
+                    </div>
+
+                    <div class="dependency-list">
+                        <span class="dependency-item">rpg_data.py</span>
+                        <span class="dependency-item">rpg_views.py</span>
+                        <span class="dependency-item">rpg_utils.py</span>
+                        <span class="dependency-item">gacha_system.py</span>
+                    </div>
+                </div>
+
+                <!-- rpg_data.py -->
+                <div class="file-item" data-file="rpg_data.py" data-tags="rpg python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📊</span>
+                            rpg_data.py
+                        </div>
+                        <div>
+                            <span class="tag rpg">RPG</span>
+                            <span class="tag">データ</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> RPGの基本データ定義
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">レアリティ別売却価格（実際の値）</div>
+                        <div class="code-content">
+<pre>SELL_PRICES = {
+    "common": 500,
+    "uncommon": 1000,
+    "rare": 2500,
+    "epic": 5000,
+    "legendary": 10000,
+    "mythic": 15000,
+    "unique": 50000
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">レアリティ別出現確率（重み値）</div>
+                        <div class="code-content">
+<pre>RARITY_WEIGHTS = {
+    "common": 339,
+    "uncommon": 300,
+    "rare": 200,
+    "epic": 100,
+    "legendary": 50,
+    "mythic": 10,
+    "unique": 1
+}</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- gacha_system.py -->
+                <div class="file-item" data-file="gacha_system.py" data-tags="rpg python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🎰</span>
+                            gacha_system.py
+                        </div>
+                        <div>
+                            <span class="tag rpg">RPG</span>
+                            <span class="tag">ガチャ</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> ガチャシステム
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">ガチャ設定（実際の値）</div>
+                        <div class="code-content">
+<pre>GACHA_SETTINGS = {
+    "junk": {
+        "cost_single": 5000,
+        "rarity_pool": {
+            "common": 0.60,
+            "uncommon": 0.29,
+            "rare": 0.10,
+            "epic": 0.01
+        }
+    },
+    "influencer": {
+        "cost_single": 30000,
+        "rarity_pool": {
+            "uncommon": 0.50,
+            "rare": 0.33,
+            "epic": 0.15,
+            "legendary": 0.02
+        }
+    },
+    "vip": {
+        "cost_single": 100000,
+        "rarity_pool": {
+            "legendary": 0.70,
+            "mythic": 0.25,
+            "unique": 0.05
+        }
+    }
+}</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 音楽システム -->
+        <section id="audio-system" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">🎵</span>
+                    音楽システム
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="file-item" data-file="sophia_audio_cog.py" data-tags="audio python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🎵</span>
+                            sophia_audio_cog.py
+                        </div>
+                        <div>
+                            <span class="tag audio">音楽</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 音楽再生機能
+                    </div>
+                    
+                    <div class="code-block">
+                        <div class="code-header">FFmpeg設定</div>
+                        <div class="code-content">
+<pre>ffmpeg_options = {
+    'before_options': '-reconnect 1 -reconnect_streamed 1 -reconnect_delay_max 5',
+    'options': '-vn -filter:a "volume=0.5"'   # 音量50%設定
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">yt-dlp設定</div>
+                        <div class="code-content">
+<pre>ytdl_format_options = {
+    'format': 'bestaudio/best',
+    'source_address': '0.0.0.0',               # IPv4指定
+    'quiet': True,
+    'no_warnings': True
+}</pre>
+                        </div>
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">環境変数</div>
+                        <div class="code-content">
+<pre>FFMPEG_PATH=                                # FFmpeg実行パス
+SPOTIFY_CLIENT_ID=                          # Spotify API ID
+SPOTIFY_CLIENT_SECRET=                      # Spotify API Secret</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 家電・環境監視システム -->
+        <section id="home-system" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">🏠</span>
+                    家電・環境監視システム
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <!-- sophia_home_cog.py -->
+                <div class="file-item" data-file="sophia_home_cog.py" data-tags="home python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🏠</span>
+                            sophia_home_cog.py
+                        </div>
+                        <div>
+                            <span class="tag home">家電</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 家電操作コマンド
+                    </div>
+
+                    <div class="dependency-list">
+                        <span class="dependency-item">switchbot_api.py</span>
+                        <span class="dependency-item">config.py</span>
+                    </div>
+                </div>
+
+                <!-- sophia_monitor_cog.py -->
+                <div class="file-item" data-file="sophia_monitor_cog.py" data-tags="home python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🌡️</span>
+                            sophia_monitor_cog.py
+                        </div>
+                        <div>
+                            <span class="tag home">監視</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 環境自動監視
+                    </div>
+
+                    <div class="dependency-list">
+                        <span class="dependency-item">switchbot_api.py</span>
+                        <span class="dependency-item">config.py</span>
+                    </div>
+                </div>
+
+                <!-- switchbot_api.py -->
+                <div class="file-item" data-file="switchbot_api.py" data-tags="home python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🔌</span>
+                            switchbot_api.py
+                        </div>
+                        <div>
+                            <span class="tag home">API</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> SwitchBot API通信
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">環境変数</div>
+                        <div class="code-content">
+<pre>SWITCH_BOT_TOKEN = "SWITCHBOT_TOKEN_PLACEHOLDER"  # SwitchBotトークン
+SWITCH_BOT_CLIENT = "SWITCHBOT_CLIENT_PLACEHOLDER"  # SwitchBotシークレット</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 情報収集システム -->
+        <section id="info-system" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">📰</span>
+                    情報収集システム
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <!-- sophia_feed_monitor_cog.py -->
+                <div class="file-item" data-file="sophia_feed_monitor_cog.py" data-tags="info python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📰</span>
+                            sophia_feed_monitor_cog.py
+                        </div>
+                        <div>
+                            <span class="tag">RSS</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> RSSフィード監視
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">デフォルトニュースソース</div>
+                        <div class="code-content">
+<pre>DEFAULT_SOURCES = [
+    "https://news.yahoo.co.jp/rss/topics/top-picks.xml",
+    "https://feeds.feedburner.com/hatena/b/hotentry",
+    "https://forest.watch.impress.co.jp/data/rss/1.0/wf/feed.rdf",
+    "https://gigazine.net/news/rss_2.0/",
+    "https://www.itmedia.co.jp/news/rss/2.0/news_bursts.xml"
+]
+
+# 監視間隔：10分
+@tasks.loop(minutes=10)</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- sophia_proactive_cog.py -->
+                <div class="file-item" data-file="sophia_proactive_cog.py" data-tags="info python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">💬</span>
+                            sophia_proactive_cog.py
+                        </div>
+                        <div>
+                            <span class="tag">自発会話</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 自発的会話機能
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">設定</div>
+                        <div class="code-content">
+<pre># 投稿時間帯設定
+# 12:00-20:00の間でランダム投稿
+
+# プロンプト設定
+config.PROACTIVE_PROMPT_TEMPLATE            # 自発会話用プロンプト</pre>
+                        </div>
+                    </div>
+
+                    <div class="dependency-list">
+                        <span class="dependency-item">config.py</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 管理・ユーティリティシステム -->
+        <section id="utility-system" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">🛠️</span>
+                    管理・ユーティリティ
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <!-- sophia_admin_cog.py -->
+                <div class="file-item" data-file="sophia_admin_cog.py" data-tags="admin python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">👑</span>
+                            sophia_admin_cog.py
+                        </div>
+                        <div>
+                            <span class="tag admin">管理</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 管理者コマンド
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">利用可能AIモデル</div>
+                        <div class="code-content">
+<pre>available_models = [
+    "gemini-2.5-pro",
+    "gemini-2.5-flash",
+    "gemini-2.5-flash-lite-preview-06-17",
+    "gemini-1.5-pro",
+    "gemini-2.0-flash",
+    "gemini-2.0-flash-lite",
+    "gemini-1.5-flash",
+    "gemini-1.5-flash-8b"
+]
+
+DEVELOPER_ID = DEVELOPER_ID                  # 開発者ID制限</pre>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- その他のユーティリティファイル -->
+                <div class="file-item" data-file="sophia_logger_cog.py" data-tags="admin python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📝</span>
+                            sophia_logger_cog.py
+                        </div>
+                        <div>
+                            <span class="tag admin">ログ</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> ユーザーメッセージログ記録
+                    </div>
+
+                    <div class="code-block">
+                        <div class="code-header">ログ設定（Windowsパス）</div>
+                        <div class="code-content">
+<pre># ログ対象ユーザー
+TARGET_USERS = {
+    DEVELOPER_ID: "USERNAME",              # ユーザーID: 名前
+}
+
+# ログ保存先（Windowsパス）
+LOG_DIRECTORY = 'DRIVE:/Python/My_LLM_Project/user_logs'
+
+# ログファイル命名規則
+log_filename = f"{username}_messages_{datetime.now().strftime('%Y%m%d')}.txt"</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 設定リファレンス -->
+        <section id="config-reference" class="content-section section">
+            <div class="section-header">
+                <div class="section-title">
+                    <span class="section-icon">🔧</span>
+                    主要設定項目クイックリファレンス
+                </div>
+                <span class="collapse-icon">▼</span>
+            </div>
+            <div class="section-content">
+                <div class="code-block">
+                    <div class="code-header">🌐 環境変数</div>
+                    <div class="code-content">
+<pre># 必須
+GOOGLE_API_KEY=                             # Gemini AI API
+DISCORD_BOT_TOKEN6=                         # Discord Bot Token
+SWITCH_BOT_TOKEN=                           # SwitchBot API Token
+SWITCH_BOT_CLIENT=                          # SwitchBot Client Secret
+# 注意: README.mdではSWITCHBOT_SECRETと記載されているが、実際のコードではSWITCH_BOT_CLIENTを使用
+
+# 音楽機能用
+FFMPEG_PATH=                                # FFmpeg実行パス
+SPOTIFY_CLIENT_ID=                          # Spotify API ID
+SPOTIFY_CLIENT_SECRET=                      # Spotify API Secret</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">🏠 デバイス設定</div>
+                    <div class="code-content">
+<pre>DEVICE_IDS = {
+    "pc": "DEVICE_PC_ID",
+    "ac": "DEVICE_AC_ID",
+    "co2_meter": "DEVICE_CO2_ID",
+    "plug_mini": "DEVICE_PLUG_ID"
+}</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">💰 RPG経済設定</div>
+                    <div class="code-content">
+<pre># ガチャコスト
+GACHA_SETTINGS = {
+    "junk": {"cost_single": 5000},
+    "influencer": {"cost_single": 30000},
+    "vip": {"cost_single": 100000}
+}
+
+# 売却価格
+SELL_PRICES = {
+    "common": 500,
+    "legendary": 10000,
+    "unique": 50000
+}</pre>
+                    </div>
+                </div>
+
+                <div class="code-block">
+                    <div class="code-header">🌡️ 環境監視しきい値</div>
+                    <div class="code-content">
+<pre>THRESHOLDS = {
+    "temperature": {"L": 20.0, "H": 28.0},
+    "humidity": {"L": 30.0, "H": 60.0},
+    "co2": {"H": 1000, "HH": 1500},
+    "power": {"H": 300.0, "HH": 500.0}
+}</pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- フローティングアクションボタン -->
+    <button class="fab" id="fab" title="トップに戻る">↑</button>
+
+    <!-- トーストメッセージ -->
+    <div class="toast" id="toast"></div>
+
+    <!-- JavaScript -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script>
+        // DOM要素の取得
+        const loading = document.getElementById('loading');
+        const sidebar = document.getElementById('sidebar');
+        const searchInput = document.getElementById('searchInput');
+        const themeToggle = document.getElementById('themeToggle');
+        const fab = document.getElementById('fab');
+        const toast = document.getElementById('toast');
+
+        // 初期化
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(() => {
+                loading.style.opacity = '0';
+                setTimeout(() => {
+                    loading.style.display = 'none';
+                    initializeApp();
+                }, 500);
+            }, 1000);
+        });
+
+        function initializeApp() {
+            setupNavigation();
+            setupSearch();
+            setupFilters();
+            setupThemeToggle();
+            setupCollapsibleSections();
+            setupFAB();
+            addAnimations();
+        }
+
+        // ナビゲーション設定
+        function setupNavigation() {
+            const navItems = document.querySelectorAll('.nav-item[data-section]');
+            
+            navItems.forEach(item => {
+                item.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    
+                    // アクティブ状態の切り替え
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    item.classList.add('active');
+                    
+                    // セクションへのスクロール
+                    const sectionId = item.getAttribute('data-section');
+                    const targetSection = document.getElementById(sectionId);
+                    
+                    if (targetSection) {
+                        targetSection.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+
+            // スクロール時の自動ナビゲーション更新
+            window.addEventListener('scroll', () => {
+                const sections = document.querySelectorAll('.content-section');
+                const scrollPos = window.scrollY + 100;
+
+                sections.forEach(section => {
+                    const top = section.offsetTop;
+                    const bottom = top + section.offsetHeight;
+                    const id = section.getAttribute('id');
+
+                    if (scrollPos >= top && scrollPos <= bottom) {
+                        navItems.forEach(nav => nav.classList.remove('active'));
+                        const activeNav = document.querySelector(`[data-section="${id}"]`);
+                        if (activeNav) activeNav.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // 検索機能
+        function setupSearch() {
+            let searchTimeout;
+
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(() => {
+                    performSearch(e.target.value.toLowerCase());
+                }, 300);
+            });
+        }
+
+        function performSearch(query) {
+            const fileItems = document.querySelectorAll('.file-item');
+            const sections = document.querySelectorAll('.section');
+            let hasResults = false;
+
+            if (!query.trim()) {
+                // 検索クエリが空の場合、すべて表示
+                fileItems.forEach(item => {
+                    item.style.display = 'block';
+                    removeHighlights(item);
+                });
+                sections.forEach(section => section.style.display = 'block');
+                return;
+            }
+
+            fileItems.forEach(item => {
+                const fileName = item.getAttribute('data-file').toLowerCase();
+                const content = item.textContent.toLowerCase();
+                
+                if (fileName.includes(query) || content.includes(query)) {
+                    item.style.display = 'block';
+                    highlightMatches(item, query);
+                    hasResults = true;
+                } else {
+                    item.style.display = 'none';
+                    removeHighlights(item);
+                }
+            });
+
+            // セクションの表示/非表示
+            sections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.file-item[style*="block"]');
+                section.style.display = visibleItems.length > 0 ? 'block' : 'none';
+            });
+
+            if (!hasResults) {
+                showToast('検索結果が見つかりませんでした', 'warning');
+            }
+        }
+
+        function highlightMatches(element, query) {
+            removeHighlights(element);
+            
+            const walker = document.createTreeWalker(
+                element,
+                NodeFilter.SHOW_TEXT,
+                null,
+                false
+            );
+
+            const textNodes = [];
+            let node;
+            while (node = walker.nextNode()) {
+                textNodes.push(node);
+            }
+
+            textNodes.forEach(textNode => {
+                const text = textNode.textContent;
+                const lowerText = text.toLowerCase();
+                const index = lowerText.indexOf(query);
+                
+                if (index !== -1) {
+                    const beforeText = text.substring(0, index);
+                    const matchText = text.substring(index, index + query.length);
+                    const afterText = text.substring(index + query.length);
+                    
+                    const fragment = document.createDocumentFragment();
+                    fragment.appendChild(document.createTextNode(beforeText));
+                    
+                    const highlight = document.createElement('span');
+                    highlight.className = 'highlight';
+                    highlight.textContent = matchText;
+                    fragment.appendChild(highlight);
+                    
+                    fragment.appendChild(document.createTextNode(afterText));
+                    
+                    textNode.parentNode.replaceChild(fragment, textNode);
+                }
+            });
+        }
+
+        function removeHighlights(element) {
+            const highlights = element.querySelectorAll('.highlight');
+            highlights.forEach(highlight => {
+                const parent = highlight.parentNode;
+                parent.replaceChild(document.createTextNode(highlight.textContent), highlight);
+                parent.normalize();
+            });
+        }
+
+        // フィルター機能
+        function setupFilters() {
+            const filterCheckboxes = document.querySelectorAll('.filter-checkbox');
+            
+            filterCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', applyFilters);
+            });
+        }
+
+        function applyFilters() {
+            const activeFilters = Array.from(document.querySelectorAll('.filter-checkbox:checked'))
+                .map(cb => cb.value);
+            
+            const fileItems = document.querySelectorAll('.file-item');
+            
+            fileItems.forEach(item => {
+                const tags = item.getAttribute('data-tags').split(' ');
+                const shouldShow = activeFilters.some(filter => tags.includes(filter));
+                
+                item.style.display = shouldShow ? 'block' : 'none';
+            });
+
+            // セクションの表示/非表示更新
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                const visibleItems = section.querySelectorAll('.file-item[style*="block"]');
+                section.style.display = visibleItems.length > 0 ? 'block' : 'none';
+            });
+        }
+
+        // テーマ切り替え
+        function setupThemeToggle() {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            applyTheme(savedTheme);
+
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.body.classList.contains('light-theme') ? 'light' : 'dark';
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                applyTheme(newTheme);
+                localStorage.setItem('theme', newTheme);
+            });
+        }
+
+        function applyTheme(theme) {
+            if (theme === 'light') {
+                document.body.classList.add('light-theme');
+                themeToggle.textContent = '🌞';
+            } else {
+                document.body.classList.remove('light-theme');
+                themeToggle.textContent = '🌙';
+            }
+        }
+
+        // 折りたたみ可能なセクション
+        function setupCollapsibleSections() {
+            const sectionHeaders = document.querySelectorAll('.section-header');
+            
+            sectionHeaders.forEach(header => {
+                header.addEventListener('click', () => {
+                    const section = header.parentNode;
+                    section.classList.toggle('collapsed');
+                });
+            });
+        }
+
+        // フローティングアクションボタン
+        function setupFAB() {
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 300) {
+                    fab.style.display = 'block';
+                } else {
+                    fab.style.display = 'none';
+                }
+            });
+
+            fab.addEventListener('click', () => {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        }
+
+        // アニメーション追加
+        function addAnimations() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('fade-in');
+                    }
+                });
+            }, observerOptions);
+
+            document.querySelectorAll('.file-item, .stat-card').forEach(item => {
+                observer.observe(item);
+            });
+        }
+
+        // トーストメッセージ
+        function showToast(message, type = 'success') {
+            toast.textContent = message;
+            toast.className = `toast ${type}`;
+            toast.classList.add('show');
+
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        // レスポンシブサイドバー（モバイル用）
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+        }
+
+        // モバイルでのサイドバー制御
+        if (window.innerWidth <= 1024) {
+            const hamburger = document.createElement('button');
+            hamburger.innerHTML = '☰';
+            hamburger.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 20px;
+                z-index: 1001;
+                background: var(--primary-color);
+                border: none;
+                color: white;
+                font-size: 1.5rem;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                cursor: pointer;
+            `;
+            hamburger.addEventListener('click', toggleSidebar);
+            document.body.appendChild(hamburger);
+        }
+
+        // キーボードショートカット
+        document.addEventListener('keydown', (e) => {
+            // Ctrl/Cmd + K で検索フォーカス
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                searchInput.focus();
+            }
+            
+            // Escape で検索クリア
+            if (e.key === 'Escape') {
+                searchInput.value = '';
+                performSearch('');
+                searchInput.blur();
+            }
+        });
+
+        // 初期表示メッセージ
+        setTimeout(() => {
+            showToast('Sophia プロジェクトドキュメントへようこそ！', 'success');
+        }, 1500);
+    </script>
+</body>
+</html>
