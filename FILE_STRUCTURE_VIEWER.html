@@ -8,18 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #2563eb;
-            --secondary-color: #1e40af;
-            --accent-color: #3b82f6;
-            --bg-color: #0f172a;
-            --card-bg: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --text-muted: #64748b;
-            --border-color: #334155;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --error-color: #ef4444;
+            --primary-color: #5865f2;
+            --secondary-color: #4752c4;
+            --accent-color: #7289da;
+            --bg-color: #36393f;
+            --card-bg: #2f3136;
+            --text-primary: #dcddde;
+            --text-secondary: #b9bbbe;
+            --text-muted: #72767d;
+            --border-color: #202225;
+            --success-color: #3ba55c;
+            --warning-color: #faa61a;
+            --error-color: #ed4245;
             --sidebar-width: 280px;
         }
 
@@ -455,6 +455,7 @@
         @media (max-width: 1024px) {
             .sidebar {
                 transform: translateX(-100%);
+                z-index: 1001;
             }
 
             .sidebar.open {
@@ -473,41 +474,125 @@
         @media (max-width: 768px) {
             .header {
                 padding: 0 1rem;
+                height: 60px;
             }
 
             .header-title {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             .search-box {
-                width: 150px;
+                width: 120px;
+            }
+
+            .search-input {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.8rem 0.4rem 2rem;
             }
 
             .main-content {
-                padding: 1rem;
+                margin-top: 60px;
+                padding: 1rem 0.5rem;
             }
 
             .stats-grid {
-                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                grid-template-columns: repeat(2, 1fr);
+                gap: 0.5rem;
+            }
+
+            .stat-card {
+                padding: 1rem 0.5rem;
+            }
+
+            .stat-number {
+                font-size: 1.5rem;
             }
 
             .section-content {
-                padding: 1rem;
+                padding: 1rem 0.5rem;
             }
 
             .file-item {
-                padding: 1rem;
+                padding: 1rem 0.5rem;
+                margin-bottom: 1rem;
+            }
+
+            .file-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 0.5rem;
+            }
+
+            .code-content {
+                font-size: 0.75rem;
+                overflow-x: auto;
+            }
+
+            .tag {
+                font-size: 0.7rem;
+                padding: 0.2rem 0.5rem;
+            }
+
+            .dependency-item {
+                font-size: 0.75rem;
+            }
+
+            .sidebar-content {
+                padding: 1rem 0.5rem;
+            }
+
+            .filter-options {
+                font-size: 0.8rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header-title {
+                font-size: 1rem;
+            }
+
+            .search-box {
+                width: 100px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .main-content {
+                padding: 0.5rem;
+            }
+
+            .section-content {
+                padding: 0.5rem;
+            }
+
+            .file-item {
+                padding: 0.75rem;
+            }
+
+            .code-content {
+                font-size: 0.7rem;
+                line-height: 1.4;
+            }
+
+            pre {
+                white-space: pre-wrap;
+                word-wrap: break-word;
             }
         }
 
         /* ダークテーマとライトテーマ切り替え */
         .light-theme {
             --bg-color: #ffffff;
-            --card-bg: #f8fafc;
-            --text-primary: #1e293b;
-            --text-secondary: #475569;
-            --text-muted: #64748b;
-            --border-color: #e2e8f0;
+            --card-bg: #f2f3f5;
+            --text-primary: #2e3338;
+            --text-secondary: #4e5058;
+            --text-muted: #6a6d75;
+            --border-color: #e3e5e8;
+            --primary-color: #5865f2;
+            --secondary-color: #4752c4;
+            --accent-color: #7289da;
         }
 
         /* スクロールバー */
@@ -669,6 +754,10 @@
                             <input type="checkbox" class="filter-checkbox" value="support" checked>
                             サポートファイル
                         </label>
+                        <label class="filter-option">
+                            <input type="checkbox" class="filter-checkbox" value="script" checked>
+                            スクリプト (.sh, .ps1)
+                        </label>
                     </div>
                 </div>
 
@@ -711,32 +800,28 @@
         <section id="overview" class="content-section">
             <div class="content-header">
                 <h1 class="content-title">Sophia プロジェクト - ファイル構造詳細</h1>
-                <p class="content-subtitle">2025-07-10 - 全ファイル詳細分析</p>
+                <p class="content-subtitle">2025-07-12 - 最新ファイル構造分析（新スクリプト含む）</p>
             </div>
 
             <div class="stats-grid">
                 <div class="stat-card">
-                    <div class="stat-number">26</div>
+                    <div class="stat-number">31</div>
                     <div class="stat-label">総ファイル数</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">10,000+</div>
-                    <div class="stat-label">総行数</div>
                 </div>
                 <div class="stat-card">
                     <div class="stat-number">8</div>
                     <div class="stat-label">主要機能システム</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">40+</div>
+                    <div class="stat-number">45</div>
                     <div class="stat-label">Discordコマンド</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">600+</div>
-                    <div class="stat-label">RPGアイテム定義</div>
+                    <div class="stat-number">80,000+</div>
+                    <div class="stat-label">RPG装備組み合わせ</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number">70</div>
+                    <div class="stat-number">76</div>
                     <div class="stat-label">敵キャラクター</div>
                 </div>
             </div>
@@ -754,32 +839,41 @@
                         <div class="code-header">プロジェクト構造</div>
                         <div class="code-content">
 <pre>Sophia/
-├── 📄 sophia_bot.py           # メインボット・AI会話システム
-├── ⚙️ config.py              # 全体設定管理
-├── 🎮 RPG_cog.py             # RPGゲームシステム
-├── 🎰 gacha_system.py        # ガチャシステム
-├── 📊 rpg_data.py            # RPGデータ定義
-├── 🔧 rpg_utils.py           # RPGユーティリティ
-├── 🎨 rpg_views.py           # RPG用UI要素
-├── 👑 sophia_admin_cog.py    # 管理者コマンド
-├── 🎵 sophia_audio_cog.py    # 音楽再生機能
-├── 📋 sophia_context_menu_cog.py # コンテキストメニュー
-├── 📰 sophia_feed_monitor_cog.py # RSSフィード監視
-├── 🏠 sophia_home_cog.py     # 家電操作
-├── 📝 sophia_logger_cog.py   # メッセージログ
-├── 🌡️ sophia_monitor_cog.py  # 環境監視
-├── 🔮 sophia_omikuji_cog.py  # おみくじ機能
-├── 💬 sophia_proactive_cog.py # 自発会話
-├── 🔌 switchbot_api.py       # SwitchBot API
-├── 🗃️ sophia_database.db     # SQLiteデータベース
-├── 🗃️ sticky_messages_sophia.db # スティッキーメッセージDB
-├── 📄 requirements.txt       # 依存関係
-├── 📄 README.md             # プロジェクト説明
-├── 📄 bot_restart.log        # 再起動ログ
-├── 📄 commit_message.txt     # Gitコミットメッセージ
-├── 📄 kakuritu.html          # RPG確率表示HTML
-├── 📄 restart_loop4.ps1      # PowerShell自動再起動スクリプト
-└── 📁 venv/                  # 仮想環境</pre>
+├── 📄 sophia_bot.py                   # メインボット・AI会話システム
+├── ⚙️ config.py                      # 全体設定管理
+├── 🎮 RPG_cog.py                     # RPGゲームシステム
+├── 🎰 gacha_system.py                # ガチャシステム
+├── 📊 rpg_data.py                    # RPGデータ定義
+├── 🔧 rpg_utils.py                   # RPGユーティリティ
+├── 🎨 rpg_views.py                   # RPG用UI要素
+├── 👑 sophia_admin_cog.py            # 管理者コマンド
+├── 🎵 sophia_audio_cog.py            # 音楽再生機能
+├── 📋 sophia_context_menu_cog.py     # コンテキストメニュー
+├── 📰 sophia_feed_monitor_cog.py     # RSSフィード監視
+├── 🏠 sophia_home_cog.py             # 家電操作
+├── 📝 sophia_logger_cog.py           # メッセージログ
+├── 🌡️ sophia_monitor_cog.py          # 環境監視
+├── 🔮 sophia_omikuji_cog.py          # おみくじ機能
+├── 💬 sophia_proactive_cog.py        # 自発会話
+├── 🔌 switchbot_api.py               # SwitchBot API
+├── 🚀 start_sophia.sh                # 【新】Sophiaボット起動スクリプト
+├── 🔄 restart_loop.sh                # 【新】自動再起動ループスクリプト
+├── 📝 auto_commit.sh                 # 【新】自動Git commitスクリプト
+├── 🔍 check_db.py                    # 【新】データベース確認・管理ツール
+├── 🗃️ sophia_database.db             # SQLiteデータベース
+├── 🗃️ sticky_messages_sophia.db      # スティッキーメッセージDB
+├── 📄 requirements.txt               # 依存関係
+├── 📄 README.md                     # プロジェクト説明
+├── 📄 auto_commit.log                # 自動コミットログ
+├── 📄 bot_restart.log                # 再起動ログ
+├── 📄 commit_message.txt             # Gitコミットメッセージ
+├── 📄 test_log.txt                   # テストログファイル
+├── 📄 kakuritu.html                  # RPG確率表示HTML
+├── 📄 restart_loop4.ps1              # PowerShell自動再起動スクリプト
+├── 📁 enemy/                         # RPG敵キャラクター（76種類）
+├── 📁 S:/                            # Windowsドライブマウント
+│   └── Python/My_LLM_Project/user_logs/
+└── 📁 venv/                          # 仮想環境</pre>
                         </div>
                     </div>
                 </div>
@@ -1328,6 +1422,74 @@ DEVELOPER_ID = DEVELOPER_ID                  # 開発者ID制限</pre>
                     </div>
                 </div>
 
+                <!-- start_sophia.sh -->
+                <div class="file-item" data-file="start_sophia.sh" data-tags="admin support script">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🚀</span>
+                            start_sophia.sh
+                        </div>
+                        <div>
+                            <span class="tag admin">起動</span>
+                            <span class="tag">Script</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> Sophiaボット起動スクリプト
+                    </div>
+                </div>
+
+                <!-- restart_loop.sh -->
+                <div class="file-item" data-file="restart_loop.sh" data-tags="admin support script">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🔄</span>
+                            restart_loop.sh
+                        </div>
+                        <div>
+                            <span class="tag admin">再起動</span>
+                            <span class="tag">Script</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 自動再起動ループスクリプト
+                    </div>
+                </div>
+
+                <!-- auto_commit.sh -->
+                <div class="file-item" data-file="auto_commit.sh" data-tags="admin support script">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">📝</span>
+                            auto_commit.sh
+                        </div>
+                        <div>
+                            <span class="tag admin">Git</span>
+                            <span class="tag">Script</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> 自動Git commitスクリプト
+                    </div>
+                </div>
+
+                <!-- check_db.py -->
+                <div class="file-item" data-file="check_db.py" data-tags="admin python">
+                    <div class="file-header">
+                        <div class="file-name">
+                            <span class="file-icon">🔍</span>
+                            check_db.py
+                        </div>
+                        <div>
+                            <span class="tag admin">DB管理</span>
+                            <span class="tag">Python</span>
+                        </div>
+                    </div>
+                    <div class="file-description">
+                        <strong>機能:</strong> データベース確認・管理ツール
+                    </div>
+                </div>
+
                 <!-- その他のユーティリティファイル -->
                 <div class="file-item" data-file="sophia_logger_cog.py" data-tags="admin python">
                     <div class="file-header">
@@ -1376,8 +1538,8 @@ log_filename = f"{username}_messages_{datetime.now().strftime('%Y%m%d')}.txt"</p
                 <div class="code-block">
                     <div class="code-header">📊 統計情報</div>
                     <div class="code-content">
-<pre>総コマンド数: 40個以上
-Slash Commands: 35個
+<pre>総コマンド数: 45個
+Slash Commands: 40個
 Context Menus: 5個
 自動機能: 10個以上
 対応システム: 11システム</pre>
