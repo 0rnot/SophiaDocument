@@ -8,18 +8,18 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         :root {
-            --primary-color: #5865f2;
-            --secondary-color: #4752c4;
-            --accent-color: #7289da;
-            --bg-color: #36393f;
-            --card-bg: #2f3136;
-            --text-primary: #dcddde;
-            --text-secondary: #b9bbbe;
-            --text-muted: #72767d;
-            --border-color: #202225;
-            --success-color: #3ba55c;
-            --warning-color: #faa61a;
-            --error-color: #ed4245;
+            --primary-color: #7c3aed;
+            --secondary-color: #6d28d9;
+            --accent-color: #8b5cf6;
+            --bg-color: #0f0f23;
+            --card-bg: #1a1a2e;
+            --text-primary: #e2e8f0;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --border-color: #16213e;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
             --sidebar-width: 280px;
         }
 
@@ -73,7 +73,7 @@
             left: 0;
             right: 0;
             height: 70px;
-            background: rgba(30, 41, 59, 0.95);
+            background: rgba(15, 15, 35, 0.95);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid var(--border-color);
             z-index: 1000;
@@ -849,12 +849,12 @@
 ├── 👑 sophia_admin_cog.py            # 管理者コマンド
 ├── 🎵 sophia_audio_cog.py            # 音楽再生機能
 ├── 📋 sophia_context_menu_cog.py     # コンテキストメニュー
-├── 📰 sophia_feed_monitor_cog.py     # RSSフィード監視
+├── 📰 sophia_feed_monitor_cog.py     # RSSフィード監視 [停止中]
 ├── 🏠 sophia_home_cog.py             # 家電操作
 ├── 📝 sophia_logger_cog.py           # メッセージログ
 ├── 🌡️ sophia_monitor_cog.py          # 環境監視
 ├── 🔮 sophia_omikuji_cog.py          # おみくじ機能
-├── 💬 sophia_proactive_cog.py        # 自発会話
+├── 💬 sophia_proactive_cog.py        # 自発会話 [停止中]
 ├── 🔌 switchbot_api.py               # SwitchBot API
 ├── 🚀 start_sophia.sh                # Sophiaボット起動スクリプト
 ├── 🔄 restart_loop.sh                # 自動再起動ループスクリプト
@@ -1316,6 +1316,7 @@ SWITCH_BOT_CLIENT = "SWITCHBOT_CLIENT_PLACEHOLDER"  # SwitchBotシークレッ�
                         <div class="file-name">
                             <span class="file-icon">📰</span>
                             sophia_feed_monitor_cog.py
+                            <span style="color: #ff6b6b; font-weight: bold; margin-left: 10px;">[停止中]</span>
                         </div>
                         <div>
                             <span class="tag">RSS</span>
@@ -1349,6 +1350,7 @@ SWITCH_BOT_CLIENT = "SWITCHBOT_CLIENT_PLACEHOLDER"  # SwitchBotシークレッ�
                         <div class="file-name">
                             <span class="file-icon">💬</span>
                             sophia_proactive_cog.py
+                            <span style="color: #ff6b6b; font-weight: bold; margin-left: 10px;">[停止中]</span>
                         </div>
                         <div>
                             <span class="tag">自発会話</span>
@@ -1715,6 +1717,7 @@ Context Menus: 5個
                             <span class="file-icon">📰</span>
                             情報収集システム
                             <span style="font-size: 0.7em; color: #64748b; margin-left: 8px;">[sophia_feed_monitor_cog.py, sophia_omikuji_cog.py, sophia_proactive_cog.py]</span>
+                            <span style="color: #ff6b6b; font-weight: bold; margin-left: 10px;">[停止中]</span>
                         </div>
                         <div>
                             <span class="tag">RSS</span>
